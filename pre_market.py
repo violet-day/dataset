@@ -66,7 +66,7 @@ def job():
 if __name__ == '__main__':
     logging.info('hi nemo')
     job()
-    schedule.every(1).minutes.do(job)
+    schedule.every(5).minutes.do(job)
     while True:
         schedule.run_pending()
         time.sleep(1)
