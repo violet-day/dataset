@@ -5,10 +5,10 @@ import logging
 import schedule
 import time
 from datetime import datetime
-
+import sys
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
-logging.basicConfig(filename='inmarket.log', level=logging.INFO, format=LOG_FORMAT)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=LOG_FORMAT)
 
 headers = {
     'authority': 'cn.investing.com',
@@ -54,9 +54,10 @@ def top_gainer():
         results = soup.find(id='stockPageInnerContent').find_all('table')[0].find_all('a')
         results = [(e.get_text(), find_symbol_by_href(e['href'])) for e in results]
         results = [symbol for text, symbol in results if symbol is not None]
-        print(results)
+        logging.info(results)
         return results
     except Exception as err:
+        logging.error(err)
         return []
 
 
@@ -72,6 +73,7 @@ def job():
 
 
 if __name__ == '__main__':
+    job()
     schedule.every(5).minutes.do(job)
     while True:
         schedule.run_pending()

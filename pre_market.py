@@ -5,9 +5,10 @@ import logging
 import schedule
 import time
 from datetime import datetime
+import sys
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
-logging.basicConfig(filename='premarket.log', level=logging.INFO, format=LOG_FORMAT)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=LOG_FORMAT)
 
 headers = {
     'authority': 'cn.investing.com',
