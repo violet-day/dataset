@@ -63,13 +63,16 @@ def top_gainer():
 
 def job():
     now = datetime.now()
-    if now <= now.replace(hour=21, minute=30) \
-        or now >= now.replace(hour=4, minute=00):
-        return
-    gainers = top_gainer()
-    with open('data/inmarket.csv', 'a') as f:
-        for g in gainers:
-            f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
+    logging.info(now)
+    if (now >= now.replace(hour=21, minute=30) and now <= now.replace(hour=23, minute=59))  or (now >= now.replace(hour=0, minute=0) and now <= now.replace(hour=4, minute=0)):
+
+      #if now <= now.replace(hour=21, minute=30) \
+      #  or now >= now.replace(hour=4, minute=00):
+      #  return
+      gainers = top_gainer()
+      with open('data/inmarket.csv', 'a') as f:
+          for g in gainers:
+              f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
 
 
 if __name__ == '__main__':
