@@ -4,8 +4,10 @@ from bs4 import BeautifulSoup
 import logging
 import schedule
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import sys
+import os
+import json
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=LOG_FORMAT)
@@ -30,6 +32,7 @@ params = (
 )
 
 href_cache = dict()
+
 
 def find_symbol_by_href(href):
     if href in href_cache:
@@ -61,23 +64,33 @@ def top_gainer():
         return []
 
 
-def job():
-    now = datetime.now()
-    logging.info(now)
-    if (now >= now.replace(hour=21, minute=30) and now <= now.replace(hour=23, minute=59))  or (now >= now.replace(hour=0, minute=0) and now <= now.replace(hour=4, minute=0)):
+root_dir = 'data/in_mkt/'
 
-      #if now <= now.replace(hour=21, minute=30) \
-      #  or now >= now.replace(hour=4, minute=00):
-      #  return
-      gainers = top_gainer()
-      with open('data/inmarket.csv', 'a') as f:
-          for g in gainers:
-              f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
+
+def job():
+    now = datetime.now() - timedelta(hours=12)
+    today_path = os.path.join(root_dir, now.strftime('%Y-%m-%d') + '.json')
+    if os.path.exists(today_path):
+        with open(today_path, 'r') as f:
+            data = json.load(f)
+            data = {s: datetime.strptime('%Y-%m-%d %H:%M:%S', t)  for s, t in data.items()}
+    else:
+        data = {}
+
+    if now >= now.replace(hour=9, minute=30, second=0) and now <= now.replace(hour=16, minute=0, second=0):
+        gainers = top_gainer()
+        should_add_gainers = [g for g in gainers if g not in data]
+        should_add_gainers = [g for g in should_add_gainers if now < data.get(g)]
+        for g in should_add_gainers :
+            data[g] = now
+        data = {s: datetime.strftime('%Y-%m-%d %H:%M:%S') for s, t in data.items()}
+        with open(today_path, 'w') as f:
+            json.dump(data, f)
 
 
 if __name__ == '__main__':
     job()
-    schedule.every(5).minutes.do(job)
+    schedule.every(4).seconds.do(job)
     while True:
         schedule.run_pending()
         time.sleep(1)
