@@ -73,17 +73,18 @@ def job():
     if os.path.exists(today_path):
         with open(today_path, 'r') as f:
             data = json.load(f)
-            data = {s: datetime.strptime('%Y-%m-%d %H:%M:%S', t)  for s, t in data.items()}
+            data = {s: datetime.strptime(t, '%Y-%m-%d %H:%M:%S')  for s, t in data.items()}
     else:
         data = {}
 
     if now >= now.replace(hour=9, minute=30, second=0) and now <= now.replace(hour=16, minute=0, second=0):
+    #if True:
         gainers = top_gainer()
-        should_add_gainers = [g for g in gainers if g not in data]
-        should_add_gainers = [g for g in should_add_gainers if now < data.get(g)]
+        print(gainers)
+        should_add_gainers = [g for g in gainers if g not in data or (g in data and now < data.get(g))]
         for g in should_add_gainers :
             data[g] = now
-        data = {s: datetime.strftime('%Y-%m-%d %H:%M:%S') for s, t in data.items()}
+        data = {s: datetime.strftime(t, '%Y-%m-%d %H:%M:%S') for s, t in data.items()}
         with open(today_path, 'w') as f:
             json.dump(data, f)
 
