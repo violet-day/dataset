@@ -1,24 +1,31 @@
-from datetime import datetime, timedelta
-
-import pandas as pd
+import json
+import os
 
 from common import upload_file
+import schedule
+import time
 
-df = pd.read_csv('data/inmarket.csv', names=['time', 'symbol'])
+root_dir = 'data/in_mkt/'
 
-result = dict()
+def reverse_symbol(symbol_log):
+    result = {}
+    for symbol, datetime in symbol_log.items():
+        if datetime not in result:
+            result[datetime] = []
+        result[datetime].append(symbol)
+    return result
 
-for _, row in df.iterrows():
-    time = datetime.strptime(row['time'], '%Y-%m-%d %H:%M') - timedelta(hours=12)
-    day = time.strftime('%Y-%m-%d')
-    if day not in result:
-        result[day] = dict()
-    daily_log = result[day]
-    symbol = row['symbol']
-    if symbol not in daily_log or daily_log.get(symbol) > time:
-        daily_log[symbol] = time - timedelta(minutes=5) 
-    daily_log = {k: v.strftime('%Y-%m-%d %H:%M') for k, v in daily_log.items()}
+def job():
+    fs = [(p.replace('.json', ''), os.path.join(root_dir, p)) for p in os.listdir(root_dir) if p.endswith('json')]
+    jsons = {day: json.load(open(file_path, 'r')) for day, file_path in fs}
 
-logs = {d: {k: v.strftime('%Y-%m-%d %H:%M') for k, v in l.items()} for d, l in result.items()}
+    jsons = {k: reverse_symbol(v) for k, v in jsons.items()}
+    upload_file(jsons, '/quant/in_mkt.json')
 
-upload_file(logs, '/quant/in_mkt.json')
+
+if __name__ == '__main__':
+    job()
+    schedule.every().day.at("10:30").do(job)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
