@@ -4,8 +4,10 @@ from bs4 import BeautifulSoup
 import logging
 import schedule
 import time
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+import pytz
 import sys
+
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=LOG_FORMAT)
@@ -25,6 +27,8 @@ headers = {
     'accept-language': 'zh-CN,zh;q=0.9',
 }
 
+tz_utc_8 = timezone(timedelta(hours=8))
+eastern = pytz.timezone('US/Eastern')
 
 def find_symbol_by_href(href):
     try:
@@ -55,13 +59,12 @@ def top_gainer():
 
 def job():
     now = datetime.now()
-    if now <= now.replace(hour=5, minute=1) \
-        or now >= now.replace(hour=10, minute=25):
-        return
-    gainers = top_gainer()
-    with open('data/premarket.csv', 'a') as f:
-        for g in gainers:
-            f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
+    now = now.astimezone(eastern)
+    if now >= now.replace(hour=4, minute=1) and now <= now.replace(hour=9, minute=25):
+        gainers = top_gainer()
+        with open('data/premarket.csv', 'a') as f:
+            for g in gainers:
+                f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
 
 
 if __name__ == '__main__':

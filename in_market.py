@@ -4,7 +4,8 @@ from bs4 import BeautifulSoup
 import logging
 import schedule
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+import pytz
 import sys
 import os
 import json
@@ -66,9 +67,12 @@ def top_gainer():
 
 root_dir = 'data/in_mkt/'
 
+tz_utc_8 = timezone(timedelta(hours=8))
+eastern = pytz.timezone('US/Eastern')
 
 def job():
-    now = datetime.now() - timedelta(hours=12)
+    now = datetime.now()
+    now = now.astimezone(eastern)
     today_path = os.path.join(root_dir, now.strftime('%Y-%m-%d') + '.json')
     if os.path.exists(today_path):
         with open(today_path, 'r') as f:
@@ -77,7 +81,10 @@ def job():
     else:
         data = {}
 
-    if now >= now.replace(hour=10, minute=30, second=0) and now <= now.replace(hour=16, minute=0, second=0):
+    now = datetime.now()
+    now = now.astimezone(eastern)
+
+    if now >= now.replace(hour=9, minute=30, second=0) and now <= now.replace(hour=16, minute=0, second=0):
     #if True:
         gainers = top_gainer()
         print(gainers)
