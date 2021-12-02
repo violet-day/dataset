@@ -77,7 +77,7 @@ def job():
     else:
         data = {}
 
-    if now >= now.replace(hour=9, minute=30, second=0) and now <= now.replace(hour=16, minute=0, second=0):
+    if now >= now.replace(hour=10, minute=30, second=0) and now <= now.replace(hour=16, minute=0, second=0):
     #if True:
         gainers = top_gainer()
         print(gainers)

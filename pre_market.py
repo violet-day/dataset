@@ -55,8 +55,8 @@ def top_gainer():
 
 def job():
     now = datetime.now()
-    if now <= now.replace(hour=16, minute=1) \
-        or now >= now.replace(hour=21, minute=25):
+    if now <= now.replace(hour=5, minute=1) \
+        or now >= now.replace(hour=10, minute=25):
         return
     gainers = top_gainer()
     with open('data/premarket.csv', 'a') as f:
