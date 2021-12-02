@@ -8,15 +8,12 @@ from common import upload_file
 def job():
     df = pd.read_csv('data/premarket.csv', names=['time', 'symbol'])
 
-    result = dict()
+    df['date'] = df['time'].apply(lambda t: t.split(' ')[0])
 
-    for _, row in df.iterrows():
-        date = row['time'].split(' ')[0]
-        if date not in result:
-            result[date] = []
-        if row['symbol'] not in result[date]:
-            result[date].append(row['symbol'])
+    output = df.groupby(['date', 'symbol']).min('time').reset_index()
+    output = output.groupby(['time']).agg(symbols=('symbol', 'unique')).reset_index()
 
+    result = {row['time']: list(row['symbols']) for _, row in output.iterrows()}
     upload_file(result, '/quant/pre_mkt.json')
 
 
