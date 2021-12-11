@@ -88,7 +88,7 @@ def job():
     #if True:
         gainers = top_gainer()
         print(gainers)
-        should_add_gainers = [g for g in gainers if g not in data or (g in data and now < data.get(g))]
+        should_add_gainers = [g for g in gainers if g not in data]
         for g in should_add_gainers :
             data[g] = now
         data = {s: datetime.strftime(t, '%Y-%m-%d %H:%M:%S') for s, t in data.items()}
