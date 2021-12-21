@@ -1,16 +1,15 @@
 import time
-
-import pandas as pd
-import pytz
-import schedule
-from common import upload_file
 from datetime import datetime
 
-eastern = pytz.timezone('US/Eastern')
+import pandas as pd
+import schedule
+
+from common import upload_file
+
 
 def job():
     df = pd.read_csv('data/premarket.csv', names=['time', 'symbol'])
-    df['time'] = df['time'].apply(lambda t: datetime.strptime(t, '%Y-%m-%d %H:%M').astimezone(eastern))
+    df['time'] = df['time'].apply(lambda t: datetime.strptime(t, '%Y-%m-%d %H:%M'))
     df['date'] = df['time'].apply(lambda t: t.strftime('%Y-%m-%d'))
     df['time'] = df['time'].apply(lambda t: t.strftime('%Y-%m-%d %H:%M'))
 

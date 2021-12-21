@@ -87,7 +87,6 @@ def job():
     if now >= now.replace(hour=9, minute=30, second=0) and now <= now.replace(hour=16, minute=0, second=0):
     #if True:
         gainers = top_gainer()
-        print(gainers)
         should_add_gainers = [g for g in gainers if g not in data]
         for g in should_add_gainers :
             data[g] = now
