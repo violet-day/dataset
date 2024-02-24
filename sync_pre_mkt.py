@@ -9,7 +9,7 @@ from common import *
 
 def job():
     now = get_eastern_now()
-    if not now.weekday() < 5:
+    if not now.weekday() >= 5:
         return
     df = pd.read_csv('data/premarket.csv', names=['time', 'symbol'])
     df['time'] = df['time'].apply(lambda t: datetime.strptime(t, '%Y-%m-%d %H:%M'))
