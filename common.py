@@ -11,7 +11,7 @@ from datetime import datetime
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
 logging.basicConfig(
-    filename='quant.log',
+    filename='logs/quant.log',
     filemode='a',
     stream=sys.stdout,
     level=logging.INFO,
