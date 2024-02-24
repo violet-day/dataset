@@ -4,10 +4,13 @@ from datetime import datetime
 import pandas as pd
 import schedule
 
-from common import upload_file
+from common import *
 
 
 def job():
+    now = get_eastern_now()
+    if not now.weekday() < 5:
+        return
     df = pd.read_csv('data/premarket.csv', names=['time', 'symbol'])
     df['time'] = df['time'].apply(lambda t: datetime.strptime(t, '%Y-%m-%d %H:%M'))
     df['date'] = df['time'].apply(lambda t: t.strftime('%Y-%m-%d'))
@@ -22,7 +25,7 @@ def job():
 
 if __name__ == '__main__':
     job()
-    schedule.every().day.at("10:30").do(job)
+    schedule.every(5).minutes.do(job)
     while True:
         schedule.run_pending()
         time.sleep(1)
