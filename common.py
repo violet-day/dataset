@@ -10,7 +10,13 @@ from datetime import datetime
 
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
-logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=LOG_FORMAT)
+logging.basicConfig(
+    filename='quant.log',
+    filemode='a',
+    stream=sys.stdout,
+    level=logging.INFO,
+    format=LOG_FORMAT
+)
 
 dropbox_token = 'TPVJIFt6o0AAAAAAAAAAAdVcDjALRqBkAYPyEHUGzrWf3NwRDIdHbzvbfNX0d-dI'
 
