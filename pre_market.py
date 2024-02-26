@@ -1,50 +1,35 @@
+import logging
 import re
 import requests
 from bs4 import BeautifulSoup
-
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import schedule
 import time
 from common import  *
 
 
-headers = {
-    'authority': 'cn.investing.com',
-    'cache-control': 'max-age=0',
-    'sec-ch-ua': '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"',
-    'sec-ch-ua-mobile': '?0',
-    'upgrade-insecure-requests': '1',
-    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36',
-    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-    'sec-fetch-site': 'same-origin',
-    'sec-fetch-mode': 'navigate',
-    'sec-fetch-user': '?1',
-    'sec-fetch-dest': 'document',
-    'accept-language': 'zh-CN,zh;q=0.9',
-}
-
-
-def find_symbol_by_href(href):
-    try:
-        res = requests.get('https://cn.investing.com' + href, headers=headers).text
-        re_result = re.findall('\"tickersymbol\":"\w+"', res)
-        if len(re_result) == 0:
-            logging.error('{} fail', href)
-            return None
-        tickersymbol = re_result[0]
-        return tickersymbol.replace('"tickersymbol":', '').strip('"')
-    except:
-        return None
-
 
 def top_gainer():
     try:
-        response = requests.get('https://cn.investing.com/equities/pre-market', headers=headers)
-        soup = BeautifulSoup(response.text)
-        tables = soup.find_all(id='premarket_gainers')
+        chrome_options = Options()
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--disable-gpu")
+        # chrome_options.add_argument("--no-sandbox") # linux only
+        chrome_options.add_argument("--headless=new")  # for Chrome >= 109
+        # chrome_options.add_argument("--headless")
+        # chrome_options.headless = True # also works
+        driver = webdriver.Chrome(options=chrome_options, executable_path='/opt/homebrew/bin/chromedriver')
+        start_url = "https://cn.investing.com/equities/pre-market"
+        driver.get(start_url)
+        text = driver.page_source.encode("utf-8")
+        soup = BeautifulSoup(text, features='html.parser')
+        tables = soup.find_all(attrs={'data-test': 'pre-market-top-gainers-losers-table'})
         premarket_gainers = tables[0]
-        results = [find_symbol_by_href(e['href']) for e in premarket_gainers.find_all('a')]
-        logging.info(results)
-        return [symbol for symbol in results if symbol is not None]
+        symbols = [element.text for element in premarket_gainers.find_all('span') if
+                   element.text not in ['名称', '最新', '涨跌幅', '交易量']]
+        logging.info(symbols)
+        return symbols
     except Exception as err:
         logging.error(err)
         return []
@@ -52,10 +37,11 @@ def top_gainer():
 
 def job():
     now = get_eastern_now()
-
+    day = now.strftime('%y%m%d')
     if now.weekday() < 5 and now.replace(hour=4, minute=1) <= now <= now.replace(hour=9, minute=25):
+        logging.info('in pre premarket time')
         gainers = top_gainer()
-        with open('data/premarket.csv', 'a') as f:
+        with open(f'data/premarket-{day}.csv', 'a') as f:
             for g in gainers:
                 f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
 
