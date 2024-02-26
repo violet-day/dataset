@@ -23,6 +23,9 @@ def top_gainer():
             chrome_options.add_argument('--disable-dev-shm-usage')
             chrome_options.add_argument("--no-sandbox") # linux only
         chrome_options.add_argument("--headless=new")  # for Chrome >= 109
+        for header_key, header_value in headers.items():
+            chrome_options.add_argument(f'{header_key}={header_value}')
+
         # chrome_options.add_argument("--headless")
         # chrome_options.headless = True # also works
         if is_linux():
