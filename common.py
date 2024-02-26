@@ -35,6 +35,8 @@ headers = {
 
 dropbox_token = 'TPVJIFt6o0AAAAAAAAAAAdVcDjALRqBkAYPyEHUGzrWf3NwRDIdHbzvbfNX0d-dI'
 
+# chrome_driver_executable_path = '/data/quant/chromedriver'
+chrome_driver_executable_path = '/opt/homebrew/bin/chromedriver'
 dbx = dropbox.Dropbox(dropbox_token)
 
 def upload_file(data, path):

@@ -19,7 +19,7 @@ def top_gainer():
         chrome_options.add_argument("--headless=new")  # for Chrome >= 109
         # chrome_options.add_argument("--headless")
         # chrome_options.headless = True # also works
-        driver = webdriver.Chrome(options=chrome_options, executable_path='/opt/homebrew/bin/chromedriver')
+        driver = webdriver.Chrome(options=chrome_options, executable_path=chrome_driver_executable_path)
         start_url = "https://cn.investing.com/equities/pre-market"
         driver.get(start_url)
         text = driver.page_source.encode("utf-8")
