@@ -13,6 +13,10 @@ from common import  *
 def top_gainer():
     try:
         chrome_options = Options()
+        if is_linux():
+            chrome_options.binary_location = chrome_binary_location_linux
+        else:
+            chrome_options.binary_location = chrome_binary_location_mac
         chrome_options.add_argument("--disable-extensions")
         chrome_options.add_argument("--disable-gpu")
         if is_linux():
