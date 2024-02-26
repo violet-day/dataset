@@ -7,7 +7,7 @@ import sys
 import pytz
 
 from datetime import datetime
-
+import platform
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
 logging.basicConfig(
@@ -35,8 +35,8 @@ headers = {
 
 dropbox_token = 'TPVJIFt6o0AAAAAAAAAAAdVcDjALRqBkAYPyEHUGzrWf3NwRDIdHbzvbfNX0d-dI'
 
-# chrome_driver_executable_path = '/data/quant/chromedriver'
-chrome_driver_executable_path = '/opt/homebrew/bin/chromedriver'
+chrome_driver_linux_executable_path = '/data/quant/chromedriver'
+chrome_driver_mac_executable_path = '/opt/homebrew/bin/chromedriver'
 dbx = dropbox.Dropbox(dropbox_token)
 
 def upload_file(data, path):
@@ -48,3 +48,8 @@ def get_eastern_now():
     now = datetime.now()
     now = now.astimezone(eastern)
     return now
+
+def is_linux():
+    return 'Linux' in platform.platform()
+
+
