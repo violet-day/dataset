@@ -21,7 +21,7 @@ def job():
     output = output.groupby(['time']).agg(symbols=('symbol', 'unique')).reset_index()
 
     result = {row['time']: list(row['symbols']) for _, row in output.iterrows()}
-    upload_file(result, f'/quant/pre_mkt-{day}.json')
+    upload_file(result, f'/quant/premkt/{day}.json')
 
 
 if __name__ == '__main__':
