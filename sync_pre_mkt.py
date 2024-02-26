@@ -12,7 +12,7 @@ def job():
     day = now.strftime('%y%m%d')
     if now.weekday() >= 5:
         return
-    df = pd.read_csv(f'data/premarket-{day}.csv', names=['time', 'symbol'])
+    df = pd.read_csv(f'data/premarket/{day}.csv', names=['time', 'symbol'])
     df['time'] = df['time'].apply(lambda t: datetime.strptime(t, '%Y-%m-%d %H:%M'))
     df['date'] = df['time'].apply(lambda t: t.strftime('%Y-%m-%d'))
     df['time'] = df['time'].apply(lambda t: t.strftime('%Y-%m-%d %H:%M'))

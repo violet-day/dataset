@@ -51,7 +51,7 @@ def job():
     if now.weekday() < 5 and now.replace(hour=4, minute=1) <= now <= now.replace(hour=9, minute=25):
         logging.info('in pre premarket time')
         gainers = top_gainer()
-        with open(f'data/premarket-{day}.csv', 'a') as f:
+        with open(f'data/premarket/{day}.csv', 'a') as f:
             for g in gainers:
                 f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
 
