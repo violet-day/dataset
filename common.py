@@ -35,7 +35,7 @@ headers = {
 
 dropbox_token = 'TPVJIFt6o0AAAAAAAAAAAdVcDjALRqBkAYPyEHUGzrWf3NwRDIdHbzvbfNX0d-dI'
 
-chrome_driver_linux_executable_path = '/data/quant/chromedriver'
+chrome_driver_linux_executable_path = '/data/quant/chromedriver-linux64/chromedriver'
 chrome_driver_mac_executable_path = '/opt/homebrew/bin/chromedriver'
 dbx = dropbox.Dropbox(dropbox_token)
 
