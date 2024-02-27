@@ -9,11 +9,12 @@ from common import *
 
 def job():
     now = get_eastern_now()
-    day = now.strftime('%y%m%d')
+    month = now.strftime('%y%m')
+
     if now.weekday() < 5 and now.replace(hour=4, minute=1) <= now <= now.replace(hour=9, minute=25):
-        file_path = f'data/premarket/{day}.csv'
+        file_path = f'data/premarket/{month}.csv'
         if not os.path.exists(file_path):
-            logging.error(f'{now} and has not file')
+            logging.error(f'{month} and has not file')
             return
         df = pd.read_csv(file_path, names=['time', 'symbol'])
         df['time'] = df['time'].apply(lambda t: datetime.strptime(t, '%Y-%m-%d %H:%M'))
@@ -24,7 +25,8 @@ def job():
         output = output.groupby(['time']).agg(symbols=('symbol', 'unique')).reset_index()
 
         result = {row['time']: list(row['symbols']) for _, row in output.iterrows()}
-        upload_file(result, f'/quant/premkt/{day}.json')
+
+        upload_file(result, f'/quant/premkt/{month}.json')
 
 
 if __name__ == '__main__':
