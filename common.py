@@ -37,6 +37,7 @@ dropbox_token = 'TPVJIFt6o0AAAAAAAAAAAdVcDjALRqBkAYPyEHUGzrWf3NwRDIdHbzvbfNX0d-d
 
 chrome_binary_location_mac = '/Users/Nemo/Workspace/stock/quant/chrome-headless-shell-mac-arm64/chrome-headless-shell'
 chrome_binary_location_linux = '/data/quant/chrome-headless-shell-linux64/chrome-headless-shell'
+# chrome_binary_location_linux = '/data/quant/chrome-linux64/chrome'
 
 chrome_driver_linux_executable_path = '/data/quant/chromedriver-linux64/chromedriver'
 chrome_driver_mac_executable_path = '/opt/homebrew/bin/chromedriver'
