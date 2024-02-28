@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager, ChromeType
 import schedule
 import time
 from common import  *
@@ -29,9 +30,17 @@ def top_gainer():
         # chrome_options.add_argument("--headless")
         # chrome_options.headless = True # also works
         if is_linux():
-            driver = webdriver.Chrome(options=chrome_options, executable_path=chrome_driver_linux_executable_path)
+            driver = webdriver.Chrome(
+                options=chrome_options,
+                executable_path=chrome_driver_linux_executable_path,
+                service_log_path='logs/chrome.log'
+            )
         else:
-            driver = webdriver.Chrome(options=chrome_options, executable_path=chrome_driver_mac_executable_path)
+            driver = webdriver.Chrome(
+                options=chrome_options,
+                executable_path=chrome_driver_mac_executable_path,
+                service_log_path='logs/chrome.log'
+        )
 
         start_url = "https://cn.investing.com/equities/pre-market"
         driver.get(start_url)
