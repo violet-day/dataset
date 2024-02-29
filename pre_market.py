@@ -5,12 +5,8 @@ from selenium.webdriver.chrome.options import Options
 import schedule
 import time
 from common import  *
-from selenium.webdriver.chrome.webdriver import WebDriver
-
-driver: WebDriver
 
 def init():
-    global driver
     chrome_options = Options()
     if is_linux():
         chrome_options.binary_location = chrome_binary_location_linux
@@ -39,31 +35,33 @@ def init():
             executable_path=chrome_driver_mac_executable_path,
             service_log_path='logs/chrome.log'
         )
+    return driver
 
 def top_gainer():
     try:
         start_url = "https://cn.investing.com/equities/pre-market"
-        driver.get(start_url)
-        text = driver.page_source.encode("utf-8")
-        soup = BeautifulSoup(text, features='html.parser')
-        tables = soup.find_all(attrs={'data-test': 'pre-market-top-gainers-losers-table'})
-        if len(tables) == 0:
-            logging.info('table is empty, we may retry')
+        with init() as driver:
             driver.get(start_url)
             text = driver.page_source.encode("utf-8")
             soup = BeautifulSoup(text, features='html.parser')
             tables = soup.find_all(attrs={'data-test': 'pre-market-top-gainers-losers-table'})
-            premarket_gainers = tables[0]
-            symbols = [element.text for element in premarket_gainers.find_all('span') if
-                       element.text not in ['名称', '最新', '涨跌幅', '交易量']]
-            logging.info(symbols)
-            return symbols
-        else:
-            premarket_gainers = tables[0]
-            symbols = [element.text for element in premarket_gainers.find_all('span') if
-                       element.text not in ['名称', '最新', '涨跌幅', '交易量']]
-            logging.info(symbols)
-            return symbols
+            if len(tables) == 0:
+                logging.info('table is empty, we may retry')
+                driver.get(start_url)
+                text = driver.page_source.encode("utf-8")
+                soup = BeautifulSoup(text, features='html.parser')
+                tables = soup.find_all(attrs={'data-test': 'pre-market-top-gainers-losers-table'})
+                premarket_gainers = tables[0]
+                symbols = [element.text for element in premarket_gainers.find_all('span') if
+                           element.text not in ['名称', '最新', '涨跌幅', '交易量']]
+                logging.info(symbols)
+                return symbols
+            else:
+                premarket_gainers = tables[0]
+                symbols = [element.text for element in premarket_gainers.find_all('span') if
+                           element.text not in ['名称', '最新', '涨跌幅', '交易量']]
+                logging.info(symbols)
+                return symbols
     except Exception as err:
         logging.exception(err)
         return []
@@ -82,9 +80,8 @@ def job():
 
 if __name__ == '__main__':
     logging.info('hi nemo')
-    init()
     job()
-    schedule.every(5).minutes.do(job)
+    schedule.every(1).minutes.do(job)
     while True:
         schedule.run_pending()
         time.sleep(1)
