@@ -53,13 +53,19 @@ def top_gainer():
             text = driver.page_source.encode("utf-8")
             soup = BeautifulSoup(text, features='html.parser')
             tables = soup.find_all(attrs={'data-test': 'pre-market-top-gainers-losers-table'})
-        premarket_gainers = tables[0]
-        symbols = [element.text for element in premarket_gainers.find_all('span') if
-                   element.text not in ['名称', '最新', '涨跌幅', '交易量']]
-        logging.info(symbols)
-        return symbols
+            premarket_gainers = tables[0]
+            symbols = [element.text for element in premarket_gainers.find_all('span') if
+                       element.text not in ['名称', '最新', '涨跌幅', '交易量']]
+            logging.info(symbols)
+            return symbols
+        else:
+            premarket_gainers = tables[0]
+            symbols = [element.text for element in premarket_gainers.find_all('span') if
+                       element.text not in ['名称', '最新', '涨跌幅', '交易量']]
+            logging.info(symbols)
+            return symbols
     except Exception as err:
-        logging.error(err)
+        logging.exception(err)
         return []
 
 
