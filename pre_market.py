@@ -28,13 +28,11 @@ def init():
         driver = webdriver.Chrome(
             options=chrome_options,
             executable_path=chrome_driver_linux_executable_path,
-            service_log_path='logs/chrome.log'
         )
     else:
         driver = webdriver.Chrome(
             options=chrome_options,
             executable_path=chrome_driver_mac_executable_path,
-            service_log_path='logs/chrome.log'
         )
     return driver
 
