@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import schedule
 import time
+from selenium.webdriver.support.ui import WebDriverWait
 from common import  *
 
 def init():
@@ -42,6 +43,7 @@ def top_gainer():
         start_url = "https://cn.investing.com/equities/pre-market"
         with init() as driver:
             driver.get(start_url)
+            WebDriverWait(driver=driver, timeout=60 * 1)
             text = driver.page_source.encode("utf-8")
             soup = BeautifulSoup(text, features='html.parser')
             tables = soup.find_all(attrs={'data-test': 'pre-market-top-gainers-losers-table'})

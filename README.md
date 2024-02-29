@@ -8,3 +8,5 @@ wget https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linu
 unzip chromedriver_linux64.zip
 https://googlechromelabs.github.io/chrome-for-testing/#stable
 >>>
+
+> kill $(ps aux | grep 'headless' | awk '{print $2}')
