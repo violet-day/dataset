@@ -51,14 +51,15 @@ def job():
 
         # day = '2024-02-26'
         symbols = df.loc[df.date==day].symbol.unique()
-
-        notify_email('PreMarket Symbols', f'watched symbols is {symbols}')
-        logging.info(symbols)
-
+        if len(symbols) > 0:
+            notify_email('PreMarket Symbols', f'watched symbols is {symbols}')
+        else:
+            logging.warning('empty symbols')
 
 if __name__ == '__main__':
     job()
-    schedule.every().day.at('9:20', 'US/Eastern').do(job)
+    schedule.every().day.at('22:20').do(job)
+
     while True:
         schedule.run_pending()
         time.sleep(1)
