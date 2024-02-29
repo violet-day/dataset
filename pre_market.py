@@ -62,6 +62,7 @@ def top_gainer():
                 premarket_gainers = tables[0]
                 symbols = [element.text for element in premarket_gainers.find_all('span') if
                            element.text not in ['名称', '最新', '涨跌幅', '交易量']]
+                symbols = sorted(symbols)
                 logging.info(symbols)
                 return symbols
     except Exception as err:
