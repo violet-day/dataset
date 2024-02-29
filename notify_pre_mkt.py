@@ -57,7 +57,7 @@ def job():
             logging.warning('empty symbols')
 
 if __name__ == '__main__':
-    job()
+
     schedule.every().day.at('22:20').do(job)
 
     while True:
