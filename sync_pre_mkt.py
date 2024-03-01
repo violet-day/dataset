@@ -22,6 +22,10 @@ def job():
         df['time'] = df['time'].apply(lambda t: t.strftime('%Y-%m-%d %H:%M'))
 
         output = df.groupby(['date', 'symbol']).min('time').reset_index()
+
+        if not 'time' in output:
+            logging.info(output)
+
         output = output.groupby(['time']).agg(symbols=('symbol', 'unique')).reset_index()
 
         result = {row['time']: list(row['symbols']) for _, row in output.iterrows()}
