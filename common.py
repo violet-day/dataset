@@ -35,10 +35,10 @@ headers = {
 user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
 dropbox_token = 'TPVJIFt6o0AAAAAAAAAAAdVcDjALRqBkAYPyEHUGzrWf3NwRDIdHbzvbfNX0d-dI'
 
-# chrome_binary_location_mac = '/Users/Nemo/Workspace/stock/quant/chrome-headless-shell-mac-arm64/chrome-headless-shell'
-chrome_binary_location_mac = '/Users/Nemo/Workspace/stock/quant/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
-# chrome_binary_location_linux = '/data/quant/chrome-headless-shell-linux64/chrome-headless-shell'
-chrome_binary_location_linux = '/data/quant/chrome-linux64/chrome'
+chrome_binary_location_mac = '/Users/Nemo/Workspace/stock/quant/chrome-headless-shell-mac-arm64/chrome-headless-shell'
+# chrome_binary_location_mac = '/Users/Nemo/Workspace/stock/quant/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
+chrome_binary_location_linux = '/data/quant/chrome-headless-shell-linux64/chrome-headless-shell'
+# chrome_binary_location_linux = '/data/quant/chrome-linux64/chrome'
 
 chrome_driver_linux_executable_path = '/data/quant/chromedriver-linux64/chromedriver'
 chrome_driver_mac_executable_path = '/opt/homebrew/bin/chromedriver'

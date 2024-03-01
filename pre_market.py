@@ -4,7 +4,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import schedule
 import time
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+
 from common import  *
 
 def init():
@@ -13,7 +16,6 @@ def init():
         chrome_options.binary_location = chrome_binary_location_linux
     else:
         chrome_options.binary_location = chrome_binary_location_mac
-    chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--dns-prefetch-disable")
 
@@ -44,12 +46,16 @@ def top_gainer():
     try:
         start_url = "https://cn.investing.com/equities/pre-market"
         with init() as driver:
-            driver.set_page_load_timeout(10)
-            driver.set_script_timeout(10)
 
             driver.get(start_url)
-            driver.implicitly_wait(10)
-            time.sleep(30 * 1)
+            driver.implicitly_wait(30)
+
+            wait = WebDriverWait(driver, timeout=45)
+            # locator = (By.CLASS_NAME, 'PreMarketTopGainersLosersTable_wrapper__5hyXT')
+            locator = (By.ID, '__next')
+            text = '美股盘前领涨股票'
+            wait.until(EC.text_to_be_present_in_element(locator,text))
+
             text = driver.page_source.encode("utf-8")
             soup = BeautifulSoup(text, features='html.parser')
             tables = soup.find_all(attrs={'data-test': 'pre-market-top-gainers-losers-table'})
