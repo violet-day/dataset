@@ -15,12 +15,16 @@ def init():
         chrome_options.binary_location = chrome_binary_location_mac
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--dns-prefetch-disable")
+
     if is_linux():
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument("--no-sandbox")  # linux only
-    chrome_options.add_argument("--headless=new")  # for Chrome >= 109
+    # chrome_options.add_argument("--headless=new")  # for Chrome >= 109
+
     for header_key, header_value in headers.items():
         chrome_options.add_argument(f'{header_key}={header_value}')
+    chrome_options.add_argument(f'--user-agent={user_agent}')
 
     # chrome_options.add_argument("--headless")
     # chrome_options.headless = True # also works
@@ -40,9 +44,11 @@ def top_gainer():
     try:
         start_url = "https://cn.investing.com/equities/pre-market"
         with init() as driver:
-            driver.set_page_load_timeout(30)
-            driver.set_script_timeout(30)
+            driver.set_page_load_timeout(10)
+            driver.set_script_timeout(10)
+
             driver.get(start_url)
+            driver.implicitly_wait(10)
             time.sleep(30 * 1)
             text = driver.page_source.encode("utf-8")
             soup = BeautifulSoup(text, features='html.parser')
