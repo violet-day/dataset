@@ -40,7 +40,8 @@ def top_gainer():
     try:
         start_url = "https://cn.investing.com/equities/pre-market"
         with init() as driver:
-            driver.set_page_load_timeout(10)
+            driver.set_page_load_timeout(30)
+            driver.set_script_timeout(30)
             driver.get(start_url)
             time.sleep(30 * 1)
             text = driver.page_source.encode("utf-8")
