@@ -45,8 +45,9 @@ chrome_driver_mac_executable_path = '/opt/homebrew/bin/chromedriver'
 dbx = dropbox.Dropbox(dropbox_token)
 
 def upload_file(data, path):
-    dbx.files_upload(str.encode(json.dumps(data, indent=' ')), path, mode=dropbox.files.WriteMode.overwrite)
+    res = dbx.files_upload(str.encode(json.dumps(data, indent=' ')), path, mode=dropbox.files.WriteMode.overwrite)
     logging.info(f"upload {path} success")
+    logging.info(res)
 
 def get_eastern_now():
     eastern = pytz.timezone('US/Eastern')
