@@ -48,7 +48,6 @@ def top_gainer():
         with init() as driver:
 
             driver.get(start_url)
-            driver.implicitly_wait(30)
 
             wait = WebDriverWait(driver, timeout=45)
             # locator = (By.CLASS_NAME, 'PreMarketTopGainersLosersTable_wrapper__5hyXT')
