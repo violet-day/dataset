@@ -45,7 +45,10 @@ chrome_driver_mac_executable_path = '/opt/homebrew/bin/chromedriver'
 dbx = dropbox.Dropbox(dropbox_token)
 
 def upload_file(data, path):
-    res = dbx.files_upload(str.encode(json.dumps(data, indent=' ')), path, mode=dropbox.files.WriteMode.overwrite)
+    dbx.files_delete_v2(path)
+    res = dbx.files_upload(str.encode(json.dumps(data, indent=' ')), path,
+                           mode=dropbox.files.WriteMode.overwrite,
+                           )
     logging.info(f"upload {path} success")
     logging.info(res)
 
