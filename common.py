@@ -44,14 +44,18 @@ chrome_driver_linux_executable_path = '/data/quant/chromedriver-linux64/chromedr
 chrome_driver_mac_executable_path = '/opt/homebrew/bin/chromedriver'
 dbx = dropbox.Dropbox(dropbox_token)
 
+
 def upload_file(data, path):
-    res = dbx.files_delete_v2(path)
-    logging.info(f'delete res is {res}')
+    now = get_eastern_now()
+    heart_beat_path = '/quant/premkt/heartbeat.txt'
+    dbx.files_upload(str.encode(now.strftime('%Y-%m-%d %H:%M')), heart_beat_path,
+                     mode=dropbox.files.WriteMode.overwrite)
     res = dbx.files_upload(str.encode(json.dumps(data, indent=' ')), path,
                            mode=dropbox.files.WriteMode.overwrite,
                            )
     logging.info(f"upload {path} success")
     logging.info(res)
+
 
 def get_eastern_now():
     eastern = pytz.timezone('US/Eastern')
@@ -59,7 +63,6 @@ def get_eastern_now():
     now = now.astimezone(eastern)
     return now
 
+
 def is_linux():
     return 'Linux' in platform.platform()
-
-
