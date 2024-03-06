@@ -84,7 +84,7 @@ def top_gainer():
 def job():
     now = get_eastern_now()
     month = now.strftime('%y%m')
-    if now.weekday() < 5 and now.replace(hour=4, minute=1) <= now <= now.replace(hour=9, minute=25):
+    if now.weekday() < 5 and now.replace(hour=4, minute=10) <= now <= now.replace(hour=9, minute=25):
         logging.info('in pre premarket time')
         gainers = top_gainer()
         with open(f'data/premarket/{month}.csv', 'a+') as f:
