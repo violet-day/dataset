@@ -50,7 +50,7 @@ def upload_file(data, path):
     heart_beat_path = '/quant/premkt/heartbeat.txt'
     dbx.files_upload(str.encode(now.strftime('%Y-%m-%d %H:%M')), heart_beat_path,
                      mode=dropbox.files.WriteMode.overwrite)
-    res = dbx.files_upload(str.encode(json.dumps(data, indent=' ')), path,
+    res = dbx.files_upload(str.encode(data), path,
                            mode=dropbox.files.WriteMode.overwrite,
                            )
     logging.info(f"upload {path} success")

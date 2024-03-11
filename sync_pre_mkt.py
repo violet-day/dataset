@@ -26,11 +26,8 @@ def job():
         if not 'time' in output:
             logging.info(output)
 
-        output = output.groupby(['time']).agg(symbols=('symbol', 'unique')).reset_index()
-
-        result = {row['time']: list(row['symbols']) for _, row in output.iterrows()}
-
-        upload_file(result, f'/quant/premkt/{month}.json')
+        output = output.groupby(['time']).agg(symbols=('symbol', 'unique'))
+        upload_file(output.to_csv(), f'/quant/premkt/{month}.csv')
 
 
 if __name__ == '__main__':
