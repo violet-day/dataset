@@ -61,7 +61,7 @@ def job():
 
 if __name__ == '__main__':
     job()
-    schedule.every(5).minutes.do(job)
+    schedule.every(1).minutes.do(job)
 
     while True:
         schedule.run_pending()
