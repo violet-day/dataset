@@ -39,6 +39,8 @@ def job():
     month = now.strftime('%y%m')
     day = now.strftime('%Y-%m-%d')
 
+    if now.strftime('%H%M') != '0920':
+        return
 
     if now.weekday() < 5:
         file_path = f'data/premarket/{month}.csv'
@@ -58,7 +60,7 @@ def job():
             logging.warning('empty symbols')
 
 if __name__ == '__main__':
-    schedule.every().day.at("09:20", "US/Eastern").do(job)
+    schedule.every(1).minutes.do(job)
 
     while True:
         schedule.run_pending()
