@@ -1,5 +1,5 @@
 beautifulsoup4==4.8.0
-schedule==1.2.1
+schedule==1.1.0
 selenium==3.141.0
 dropbox==11.36.2
 pytz==2024.1
