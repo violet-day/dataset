@@ -46,33 +46,32 @@ def top_gainer():
     try:
         start_url = "https://cn.investing.com/equities/pre-market"
         with init() as driver:
-
             driver.get(start_url)
 
             wait = WebDriverWait(driver, timeout=45)
-            # locator = (By.CLASS_NAME, 'PreMarketTopGainersLosersTable_wrapper__5hyXT')
-            locator = (By.ID, '__next')
-            text = '美股盘前领涨股票'
-            wait.until(EC.text_to_be_present_in_element(locator,text))
+            wait.until(EC.title_contains('美股盘前交易'))
 
             text = driver.page_source.encode("utf-8")
             soup = BeautifulSoup(text, features='html.parser')
-            tables = soup.find_all(attrs={'data-test': 'pre-market-top-gainers-losers-table'})
+            tables = soup.find_all(attrs={'data-test': 'pre-market-gainers-table'})
             if len(tables) == 0:
                 logging.info('table is empty, we may retry')
                 driver.get(start_url)
                 text = driver.page_source.encode("utf-8")
                 soup = BeautifulSoup(text, features='html.parser')
-                tables = soup.find_all(attrs={'data-test': 'pre-market-top-gainers-losers-table'})
+                tables = soup.find_all(attrs={'data-test': 'pre-market-gainers-table'})
                 premarket_gainers = tables[0]
-                symbols = [element.text for element in premarket_gainers.find_all('span') if
-                           element.text not in ['名称', '最新', '涨跌幅', '交易量']]
+                trs = premarket_gainers.find('tbody').find_all('tr')
+                spans = [[s.text for s in tr.find('td').find_all('span') if len(s.text) > 0][0] for tr in trs]
+                symbols = spans
+                symbols = sorted(symbols)
                 logging.info(symbols)
                 return symbols
             else:
                 premarket_gainers = tables[0]
-                symbols = [element.text for element in premarket_gainers.find_all('span') if
-                           element.text not in ['名称', '最新', '涨跌幅', '交易量']]
+                trs = premarket_gainers.find('tbody').find_all('tr')
+                spans = [[s.text for s in tr.find('td').find_all('span') if len(s.text) > 0][0] for tr in trs]
+                symbols = spans
                 symbols = sorted(symbols)
                 logging.info(symbols)
                 return symbols

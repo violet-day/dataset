@@ -44,7 +44,6 @@ chrome_driver_linux_executable_path = '/data/quant/chromedriver-linux64/chromedr
 chrome_driver_mac_executable_path = '/opt/homebrew/bin/chromedriver'
 dbx = dropbox.Dropbox(dropbox_token)
 
-
 def upload_file(data, path):
     now = get_eastern_now()
     heart_beat_path = '/quant/premkt/heartbeat.txt'
