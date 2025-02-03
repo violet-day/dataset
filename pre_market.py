@@ -10,7 +10,18 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from common import  *
 
+from selenium import webdriver
+
+
 def init():
+    if is_linux():
+        options = webdriver.ChromeOptions()
+        options.binary_location = chrome_binary_location_linux
+        options.add_argument("--headless=new")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        driver = webdriver.Chrome(options=options)
+        return driver
     chrome_options = Options()
     if is_linux():
         chrome_options.binary_location = chrome_binary_location_linux
@@ -22,7 +33,7 @@ def init():
     if is_linux():
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument("--no-sandbox")  # linux only
-    # chrome_options.add_argument("--headless=new")  # for Chrome >= 109
+    chrome_options.add_argument("--headless")  # for Chrome >= 109
 
     for header_key, header_value in headers.items():
         chrome_options.add_argument(f'{header_key}={header_value}')

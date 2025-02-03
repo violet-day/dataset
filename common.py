@@ -36,13 +36,11 @@ dropbox_token = 'TPVJIFt6o0AAAAAAAAAAAdVcDjALRqBkAYPyEHUGzrWf3NwRDIdHbzvbfNX0d-d
 
 chrome_binary_location_mac = '/Users/Nemo/Workspace/quant/dataset/chrome-headless-shell-mac-arm64/chrome-headless-shell'
 # chrome_binary_location_mac = '/Users/Nemo/Workspace/stock/quant/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
-chrome_binary_location_linux = '/data/quant/chrome-headless-shell-linux64/chrome-headless-shell'
-# chrome_binary_location_linux = '/data/quant/chrome-linux64/chrome'
+# chrome_binary_location_linux = '/data/quant/chrome-headless-shell-linux64/chrome-headless-shell'
+chrome_binary_location_linux = '/usr/bin/google-chrome-stable'
 
 chrome_driver_linux_executable_path = '/data/quant/chromedriver-linux64/chromedriver'
 chrome_driver_mac_executable_path = '/opt/homebrew/bin/chromedriver'
-
-github_token = ''
 
 # 替换为你的 GitHub 个人访问令牌
 access_token = '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'
