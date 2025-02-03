@@ -83,13 +83,15 @@ def top_gainer():
 def job():
     now = get_eastern_now()
     month = now.strftime('%y%m')
+    import os
+    os.makedirs('data/premarket/', exist_ok=True)
     if now.weekday() < 5 and now.replace(hour=4, minute=10) <= now <= now.replace(hour=9, minute=25):
         logging.info('in pre premarket time')
         gainers = top_gainer()
         with open(f'data/premarket/{month}.csv', 'a+') as f:
             for g in gainers:
                 f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
-
+    sync_to_github()
 
 if __name__ == '__main__':
     logging.info('hi nemo')

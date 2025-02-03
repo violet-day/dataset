@@ -1,13 +1,14 @@
-import dropbox
+
 import json
 
 import logging
 import sys
 
 import pytz
-
+from github import Github
 from datetime import datetime
 import platform
+import os
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
 logging.basicConfig(
@@ -35,14 +36,27 @@ headers = {
 user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
 dropbox_token = 'TPVJIFt6o0AAAAAAAAAAAdVcDjALRqBkAYPyEHUGzrWf3NwRDIdHbzvbfNX0d-dI'
 
-chrome_binary_location_mac = '/Users/Nemo/Workspace/stock/quant/chrome-headless-shell-mac-arm64/chrome-headless-shell'
+chrome_binary_location_mac = '/Users/Nemo/Workspace/quant/dataset/chrome-headless-shell-mac-arm64/chrome-headless-shell'
 # chrome_binary_location_mac = '/Users/Nemo/Workspace/stock/quant/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
 chrome_binary_location_linux = '/data/quant/chrome-headless-shell-linux64/chrome-headless-shell'
 # chrome_binary_location_linux = '/data/quant/chrome-linux64/chrome'
 
 chrome_driver_linux_executable_path = '/data/quant/chromedriver-linux64/chromedriver'
 chrome_driver_mac_executable_path = '/opt/homebrew/bin/chromedriver'
-dbx = dropbox.Dropbox(dropbox_token)
+
+github_token = ''
+
+# 替换为你的 GitHub 个人访问令牌
+access_token = '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'
+# 替换为仓库所有者的用户名
+repo_owner = 'violet-day'
+# 替换为仓库名称
+repo_name = 'dataset'
+# 替换为要同步的分支
+branch = 'dataset'
+# 本地保存文件的目录
+local_dir = './data'
+
 
 def upload_file(data, path):
     now = get_eastern_now()
@@ -65,3 +79,13 @@ def get_eastern_now():
 
 def is_linux():
     return 'Linux' in platform.platform()
+
+def sync_to_github():
+    import subprocess
+    subprocess.run(['sh', 'sync_github.sh'])
+
+def shrink_up_dataset():
+    pass
+
+if __name__ == "__main__":
+    sync_to_github()
