@@ -1,14 +1,12 @@
 
-import json
 
 import logging
 import sys
 
 import pytz
-from github import Github
+
 from datetime import datetime
 import platform
-import os
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
 logging.basicConfig(
