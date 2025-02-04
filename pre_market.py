@@ -87,7 +87,7 @@ def job():
     month = now.strftime('%y%m')
     import os
     os.makedirs('data/premarket/', exist_ok=True)
-    if True:#now.weekday() < 5 and now.replace(hour=4, minute=10) <= now <= now.replace(hour=9, minute=25):
+    if now.weekday() < 5 and now.replace(hour=4, minute=10) <= now <= now.replace(hour=9, minute=25):
         logging.info('in pre premarket time')
         gainers = top_gainer()
         logging.info(f'fetch top gainer {gainers}')

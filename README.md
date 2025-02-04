@@ -1,5 +1,6 @@
 
 ## install
+* from `https://getwebdriver.com/chromedriver#stable` download *chromedriver*
 * code in /data/quant
 * supervisor config is /etc/supervisord.d
 
