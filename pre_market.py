@@ -9,6 +9,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from trio import sleep
 
 from common import  *
 
@@ -64,8 +65,7 @@ def top_gainer():
         with init() as driver:
             driver.get(start_url)
 
-            wait = WebDriverWait(driver, timeout=45)
-            wait.until(EC.title_contains('Premarket Gainers'))
+            sleep(30)
 
             text = driver.page_source.encode("utf-8")
             logging.info('get text success')
@@ -88,10 +88,10 @@ def job():
     import os
     os.makedirs('data/premarket/', exist_ok=True)
     if now.weekday() < 5 and now.replace(hour=4, minute=10) <= now <= now.replace(hour=9, minute=25):
-        logging.info('in pre premarket time')
+        logging.info('in premarket time')
         gainers = top_gainer()
         logging.info(f'fetch top gainer {gainers}')
-        with open(f'data/premarket/{month}.csv', 'a+') as f:
+        with open(f'data/premarket/{month}_raw.csv', 'a+') as f:
             for g in gainers:
                 f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
 
