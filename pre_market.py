@@ -4,6 +4,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import schedule
 import time
+
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -12,45 +14,43 @@ from common import  *
 
 from selenium import webdriver
 
-
 def init():
     if is_linux():
+        service = Service(chrome_binary_location_linux)
+
         options = webdriver.ChromeOptions()
-        options.binary_location = chrome_binary_location_linux
-        options.add_argument("--headless=new")
+        options.add_argument("--headless")
         options.add_argument("--disable-gpu")
         options.add_argument("--no-sandbox")
-        driver = webdriver.Chrome(options=options)
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--enable-javascript')
+        options.add_argument('--enable-cookies')
+
+        for header_key, header_value in headers.items():
+            options.add_argument(f'{header_key}={header_value}')
+        options.add_argument(f'--user-agent={user_agent}')
+
+        # 创建 Chrome 浏览器驱动实例，并传入 Service 对象
+        driver = webdriver.Chrome(service=service, options=options)
+
         return driver
-    chrome_options = Options()
-    if is_linux():
-        chrome_options.binary_location = chrome_binary_location_linux
     else:
-        chrome_options.binary_location = chrome_binary_location_mac
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--dns-prefetch-disable")
+        service = Service(chrome_binary_location_mac)
 
-    if is_linux():
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        chrome_options.add_argument("--no-sandbox")  # linux only
-    chrome_options.add_argument("--headless")  # for Chrome >= 109
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--enable-javascript')
+        options.add_argument('--enable-cookies')
 
-    for header_key, header_value in headers.items():
-        chrome_options.add_argument(f'{header_key}={header_value}')
-    chrome_options.add_argument(f'--user-agent={user_agent}')
+        for header_key, header_value in headers.items():
+            options.add_argument(f'{header_key}={header_value}')
+        options.add_argument(f'--user-agent={user_agent}')
 
-    # chrome_options.add_argument("--headless")
-    # chrome_options.headless = True # also works
-    if is_linux():
-        driver = webdriver.Chrome(
-            options=chrome_options,
-            executable_path=chrome_driver_linux_executable_path,
-        )
-    else:
-        driver = webdriver.Chrome(
-            options=chrome_options,
-            executable_path=chrome_driver_mac_executable_path,
-        )
+        # 创建 Chrome 浏览器驱动实例，并传入 Service 对象
+        driver = webdriver.Chrome(service=service, options=options)
     return driver
 
 def top_gainer():
@@ -58,7 +58,6 @@ def top_gainer():
         start_url = "https://cn.investing.com/equities/pre-market"
         with init() as driver:
             driver.get(start_url)
-
             wait = WebDriverWait(driver, timeout=45)
             wait.until(EC.title_contains('美股盘前交易'))
 
@@ -96,14 +95,14 @@ def job():
     month = now.strftime('%y%m')
     import os
     os.makedirs('data/premarket/', exist_ok=True)
-    if now.weekday() < 5 and now.replace(hour=4, minute=10) <= now <= now.replace(hour=9, minute=25):
+    if True:#now.weekday() < 5 and now.replace(hour=4, minute=10) <= now <= now.replace(hour=9, minute=25):
         logging.info('in pre premarket time')
         gainers = top_gainer()
         with open(f'data/premarket/{month}.csv', 'a+') as f:
             for g in gainers:
                 f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
-    if len(gainers)>0:
-        sync_to_github()
+        # if len(gainers)>0:
+        #     sync_to_github()
 
 if __name__ == '__main__':
     logging.info('hi nemo')

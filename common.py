@@ -31,16 +31,12 @@ headers = {
     'upgrade-insecure-requests': '1',
     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
 }
+
 user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
 dropbox_token = 'TPVJIFt6o0AAAAAAAAAAAdVcDjALRqBkAYPyEHUGzrWf3NwRDIdHbzvbfNX0d-dI'
 
-chrome_binary_location_mac = '/Users/Nemo/Workspace/quant/dataset/chrome-headless-shell-mac-arm64/chrome-headless-shell'
-# chrome_binary_location_mac = '/Users/Nemo/Workspace/stock/quant/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
-# chrome_binary_location_linux = '/data/quant/chrome-headless-shell-linux64/chrome-headless-shell'
-chrome_binary_location_linux = '/usr/bin/google-chrome-stable'
-
-chrome_driver_linux_executable_path = '/data/quant/chromedriver-linux64/chromedriver'
-chrome_driver_mac_executable_path = '/opt/homebrew/bin/chromedriver'
+chrome_binary_location_mac = '/Users/Nemo/Workspace/quant/dataset/bin/chromedriver-mac-arm64/chromedriver'
+chrome_binary_location_linux = '/data/dataset/bin/chromedriver-linux64/chromedriver'
 
 # 替换为你的 GitHub 个人访问令牌
 access_token = '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'
@@ -53,25 +49,11 @@ branch = 'dataset'
 # 本地保存文件的目录
 local_dir = './data'
 
-
-def upload_file(data, path):
-    now = get_eastern_now()
-    heart_beat_path = '/quant/premkt/heartbeat.txt'
-    dbx.files_upload(str.encode(now.strftime('%Y-%m-%d %H:%M')), heart_beat_path,
-                     mode=dropbox.files.WriteMode.overwrite)
-    res = dbx.files_upload(str.encode(data), path,
-                           mode=dropbox.files.WriteMode.overwrite,
-                           )
-    logging.info(f"upload {path} success")
-    logging.info(res)
-
-
 def get_eastern_now():
     eastern = pytz.timezone('US/Eastern')
     now = datetime.now()
     now = now.astimezone(eastern)
     return now
-
 
 def is_linux():
     return 'Linux' in platform.platform()

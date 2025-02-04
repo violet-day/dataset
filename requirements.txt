@@ -1,4 +1,4 @@
-beautifulsoup4==4.8.0
+beautifulsoup4==4.11.1
 schedule==1.2.1
 selenium==4.28.1
 pytz==2024.1

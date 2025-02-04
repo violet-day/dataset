@@ -10,3 +10,5 @@ https://googlechromelabs.github.io/chrome-for-testing/#stable
 >>>
 
 > kill $(ps aux | grep 'chrome' | awk '{print $2}')
+
+> https://getwebdriver.com/chromedriver#stable
