@@ -38,13 +38,18 @@ def init():
         service = Service(chrome_binary_location_mac)
 
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
-        options.add_argument("--disable-gpu")
-        options.add_argument("--no-sandbox")
-        options.add_argument('--disable-dev-shm-usage')
-        options.add_argument('--enable-javascript')
-        options.add_argument('--enable-cookies')
-
+        # options.add_argument("--headless")
+        # options.add_argument("--disable-gpu")
+        # options.add_argument("--no-sandbox")
+        # options.add_argument('--disable-dev-shm-usage')
+        # options.add_argument('--enable-javascript')
+        # options.add_argument('--enable-cookies')
+        options.add_experimental_option(
+            "prefs", {
+                # block image loading
+                "profile.managed_default_content_settings.images": 2,
+            }
+        )
         for header_key, header_value in headers.items():
             options.add_argument(f'{header_key}={header_value}')
         options.add_argument(f'--user-agent={user_agent}')
@@ -55,40 +60,27 @@ def init():
 
 def top_gainer():
     try:
-        start_url = "https://cn.investing.com/equities/pre-market"
+        start_url = 'https://stockanalysis.com/markets/premarket/gainers/'
         with init() as driver:
             driver.get(start_url)
+
             wait = WebDriverWait(driver, timeout=45)
-            wait.until(EC.title_contains('美股盘前交易'))
+            wait.until(EC.title_contains('Premarket Gainers'))
 
             text = driver.page_source.encode("utf-8")
+            logging.info('get text success')
             soup = BeautifulSoup(text, features='html.parser')
-            tables = soup.find_all(attrs={'data-test': 'pre-market-gainers-table'})
+            tables = soup.find_all(attrs={'id': 'main-table-wrap'})
             if len(tables) == 0:
-                logging.info('table is empty, we may retry')
-                driver.get(start_url)
-                text = driver.page_source.encode("utf-8")
-                soup = BeautifulSoup(text, features='html.parser')
-                tables = soup.find_all(attrs={'data-test': 'pre-market-gainers-table'})
-                premarket_gainers = tables[0]
-                trs = premarket_gainers.find('tbody').find_all('tr')
-                spans = [[s.text for s in tr.find('td').find_all('span') if len(s.text) > 0][0] for tr in trs]
-                symbols = spans
-                symbols = sorted(symbols)
-                logging.info(symbols)
-                return symbols
-            else:
-                premarket_gainers = tables[0]
-                trs = premarket_gainers.find('tbody').find_all('tr')
-                spans = [[s.text for s in tr.find('td').find_all('span') if len(s.text) > 0][0] for tr in trs]
-                symbols = spans
-                symbols = sorted(symbols)
-                logging.info(symbols)
-                return symbols
-    except Exception as err:
-        logging.exception(err)
+                logging.warning('No tables found')
+            table = tables[0]
+            trs = table.find('tbody').find_all('tr')
+            tickers = []
+            for tr in trs:
+                tickers.append(tr.find_all('td')[1].text.strip())
+            return tickers
+    except:
         return []
-
 
 def job():
     now = get_eastern_now()
@@ -98,6 +90,7 @@ def job():
     if True:#now.weekday() < 5 and now.replace(hour=4, minute=10) <= now <= now.replace(hour=9, minute=25):
         logging.info('in pre premarket time')
         gainers = top_gainer()
+        logging.info(f'fetch top gainer {gainers}')
         with open(f'data/premarket/{month}.csv', 'a+') as f:
             for g in gainers:
                 f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
