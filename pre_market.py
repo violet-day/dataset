@@ -91,7 +91,7 @@ def job():
         logging.info('in premarket time')
         gainers = top_gainer()
         logging.info(f'fetch top gainer {gainers}')
-        with open(f'data/premarket/{month}_raw.csv', 'a+') as f:
+        with open(f'data/premarket/{month}.csv', 'a+') as f:
             for g in gainers:
                 f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
 
