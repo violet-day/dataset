@@ -83,8 +83,8 @@ def job():
     day = now.strftime('%y%m%d')
     import os
     os.makedirs('data/inmarket/daily/', exist_ok=True)
-    # if now.weekday() < 5 and now.replace(hour=9, minute=30) <= now <= now.replace(hour=16, minute=0):
-    if True:
+    if now.weekday() < 5 and now.replace(hour=9, minute=30) <= now <= now.replace(hour=16, minute=0):
+    # if True:
         logging.info('in market time')
         gainers = top_gainer()
         logging.info(f'fetch top gainer {gainers}')
