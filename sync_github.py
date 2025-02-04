@@ -1,20 +1,21 @@
-from pathlib import Path
 
-def pathlib_traverse_iter(path, pattern):
-    """
-    使用 pathlib 模块递归遍历目录并返回迭代器
-    :param path: 要遍历的目录路径
-    :return: 迭代器，每次迭代返回文件或目录的完整路径
-    """
-    path_obj = Path(path)
-    if path_obj.exists():
-        for item in path_obj.rglob(pattern):
-            yield item
+import logging
+import subprocess
 
-# 示例用法
-directory_path = './data/premarket'  # 当前目录
-for item in pathlib_traverse_iter(directory_path, '*.csv'):
-    print(item)
+from common import get_eastern_now
+import schedule
+import time
 
-def shirk_up_raw_csv(path):
-    pass
+def job():
+    now = get_eastern_now()
+    # if now.weekday() < 5 and now.replace(hour=9, minute=30) <= now <= now.replace(hour=16, minute=0):
+    if True:
+        subprocess.run(['sh', 'sync_github.sh'])
+
+if __name__ == '__main__':
+    logging.info('hi nemo, pre sync github')
+    job()
+    schedule.every(30).seconds.do(job)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)

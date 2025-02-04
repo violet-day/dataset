@@ -37,9 +37,9 @@ else
 fi
 
 # 拉取远程目标分支的最新代码
-git pull origin "$TARGET_BRANCH" --merge
+git pull origin "$TARGET_BRANCH" --rebase=merges
 
 # 推送更改到 GitHub 的指定分支
-git push -u origin "$TARGET_BRANCH"
+git push -u origin "$TARGET_BRANCH" -f
 
 echo "本地目录已成功同步到 GitHub 的 $TARGET_BRANCH 分支"

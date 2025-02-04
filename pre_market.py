@@ -9,7 +9,6 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from trio import sleep
 
 from common import  *
 
@@ -65,7 +64,7 @@ def top_gainer():
         with init() as driver:
             driver.get(start_url)
 
-            sleep(30)
+            time.sleep(30)
 
             text = driver.page_source.encode("utf-8")
             logging.info('get text success')
@@ -82,18 +81,30 @@ def top_gainer():
     except:
         return []
 
+daily_tickers = {}
+
 def job():
+    global daily_tickers
     now = get_eastern_now()
     month = now.strftime('%y%m')
+    day = now.strftime('%y%m%d')
+    if day not in daily_tickers:
+        daily_tickers[day] = set()
+
     import os
     os.makedirs('data/premarket/', exist_ok=True)
     if now.weekday() < 5 and now.replace(hour=4, minute=10) <= now <= now.replace(hour=9, minute=25):
+    # if True:
         logging.info('in premarket time')
         gainers = top_gainer()
+
+        gainers = [t for t in gainers if t not in daily_tickers[day]]
         logging.info(f'fetch top gainer {gainers}')
-        with open(f'data/premarket/{month}.csv', 'a+') as f:
-            for g in gainers:
-                f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
+        if gainers:
+            with open(f'data/premarket/{month}.csv', 'a+') as f:
+                for g in gainers:
+                    f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
+            daily_tickers[day] = daily_tickers[day].union(set(gainers))
 
 if __name__ == '__main__':
     logging.info('hi nemo')

@@ -78,19 +78,35 @@ def top_gainer():
     except Exception as e:
         return []
 
+
+daily_tickers = {}
+
 def job():
+    global daily_tickers
     now = get_eastern_now()
     day = now.strftime('%y%m%d')
+    if day not in daily_tickers:
+        daily_tickers[day] = set()
+
+    month = now.strftime('%y%m')
     import os
     os.makedirs('data/inmarket/daily/', exist_ok=True)
+    os.makedirs('data/inmarket/month/', exist_ok=True)
     if now.weekday() < 5 and now.replace(hour=9, minute=30) <= now <= now.replace(hour=16, minute=0):
     # if True:
         logging.info('in market time')
         gainers = top_gainer()
+        gainers = [t for t in gainers if t not in daily_tickers[day]]
         logging.info(f'fetch top gainer {gainers}')
-        with open(f'data/inmarket/daily/{day}.csv', 'a+') as f:
-            for g in gainers:
-                f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
+        if gainers:
+            with open(f'data/inmarket/daily/{day}.csv', 'a+') as f:
+                for g in gainers:
+                    f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
+            with open(f'data/inmarket/month/{month}.csv', 'a+') as f:
+                for g in gainers:
+                    f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
+
+            daily_tickers[day] = daily_tickers[day].union(set(gainers))
 
 if __name__ == '__main__':
     logging.info('hi nemo')
