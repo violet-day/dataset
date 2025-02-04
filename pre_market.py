@@ -94,7 +94,7 @@ def job():
         with open(f'data/premarket/{month}.csv', 'a+') as f:
             for g in gainers:
                 f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
-                
+
 if __name__ == '__main__':
     logging.info('hi nemo')
     job()
