@@ -33,7 +33,6 @@ headers = {
 }
 
 user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
-dropbox_token = 'TPVJIFt6o0AAAAAAAAAAAdVcDjALRqBkAYPyEHUGzrWf3NwRDIdHbzvbfNX0d-dI'
 
 chrome_binary_location_mac = '/Users/Nemo/Workspace/quant/dataset/bin/chromedriver-mac-arm64/chromedriver'
 chrome_binary_location_linux = '/data/dataset/bin/chromedriver-linux64/chromedriver'
