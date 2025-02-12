@@ -15,7 +15,7 @@ def job():
 if __name__ == '__main__':
     logging.info('hi nemo, pre sync github')
     job()
-    schedule.every(30).seconds.do(job)
+    schedule.every(60).seconds.do(job)
     while True:
         schedule.run_pending()
         time.sleep(1)
