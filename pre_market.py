@@ -98,7 +98,7 @@ def job():
         logging.info('in premarket time')
         gainers = top_gainer()
 
-        gainers = [t for t in gainers if t not in daily_tickers[day]]
+        gainers = [t for t in gainers]
         logging.info(f'fetch top gainer {gainers}')
         if gainers:
             with open(f'data/premarket/{month}.csv', 'a+') as f:

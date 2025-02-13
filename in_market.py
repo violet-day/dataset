@@ -96,7 +96,7 @@ def job():
     # if True:
         logging.info('in market time')
         gainers = top_gainer()
-        gainers = [t for t in gainers if t not in daily_tickers[day]]
+        gainers = [t for t in gainers]
         logging.info(f'fetch top gainer {gainers}')
         if gainers:
             with open(f'data/inmarket/daily/{day}.csv', 'a+') as f:
