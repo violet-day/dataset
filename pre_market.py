@@ -59,6 +59,7 @@ def init():
     return driver
 
 def top_gainer():
+    symbols = []
     try:
         start_url = 'https://stockanalysis.com/markets/premarket/gainers/'
         with init() as driver:
@@ -74,12 +75,19 @@ def top_gainer():
                 logging.warning('No tables found')
             table = tables[0]
             trs = table.find('tbody').find_all('tr')
-            tickers = []
+
             for tr in trs:
-                tickers.append(tr.find_all('td')[1].text.strip())
-            return tickers
+                tds = tr.find_all('td')
+                symbols.append({
+                    'ticker': tds[1].text.strip(),
+                    'change': float(tds[3].text.strip().replace(',', '').replace('%', ''))/100,
+                    'price': float(tds[4].text.strip()),
+                    'mkt_cap': market_cap_to_float(tds[6].text.strip())
+                })
+            return symbols
     except:
-        return []
+        return symbols
+
 
 daily_tickers = {}
 
@@ -98,13 +106,11 @@ def job():
         logging.info('in premarket time')
         gainers = top_gainer()
 
-        gainers = [t for t in gainers]
         logging.info(f'fetch top gainer {gainers}')
         if gainers:
             with open(f'data/premarket/{month}.csv', 'a+') as f:
                 for g in gainers:
-                    f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
-            daily_tickers[day] = daily_tickers[day].union(set(gainers))
+                    f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + symbol_to_line(g) + '\n')
 
 if __name__ == '__main__':
     logging.info('hi nemo')

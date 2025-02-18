@@ -59,6 +59,7 @@ def init():
     return driver
 
 def top_gainer():
+    symbols = []
     try:
         start_url = 'https://stockanalysis.com/markets/gainers/'
         with init() as driver:
@@ -71,12 +72,18 @@ def top_gainer():
                 logging.warning('No tables found')
             table = tables[0]
             trs = table.find('tbody').find_all('tr')
-            tickers = []
+
             for tr in trs:
-                tickers.append(tr.find_all('td')[1].text.strip())
-            return tickers
+                tds = tr.find_all('td')
+                symbols.append({
+                    'ticker': tds[1].text.strip(),
+                    'change': float(tds[3].text.strip().replace(',', '').replace('%', '')) / 100,
+                    'price': float(tds[4].text.strip()),
+                    'mkt_cap': market_cap_to_float(tds[6].text.strip())
+                })
+            return symbols
     except Exception as e:
-        return []
+        return symbols
 
 
 daily_tickers = {}
@@ -92,21 +99,19 @@ def job():
     import os
     os.makedirs('data/inmarket/daily/', exist_ok=True)
     os.makedirs('data/inmarket/month/', exist_ok=True)
-    if now.weekday() < 5 and now.replace(hour=9, minute=30) <= now <= now.replace(hour=16, minute=0):
-    # if True:
+    # if now.weekday() < 5 and now.replace(hour=9, minute=30) <= now <= now.replace(hour=16, minute=0):
+    if True:
         logging.info('in market time')
         gainers = top_gainer()
-        gainers = [t for t in gainers]
         logging.info(f'fetch top gainer {gainers}')
         if gainers:
             with open(f'data/inmarket/daily/{day}.csv', 'a+') as f:
                 for g in gainers:
-                    f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
+                    f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + symbol_to_line(g) + '\n')
             with open(f'data/inmarket/month/{month}.csv', 'a+') as f:
                 for g in gainers:
-                    f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + g + '\n')
+                    f.writelines(now.strftime('%Y-%m-%d %H:%M') + ',' + symbol_to_line(g) + '\n')
 
-            daily_tickers[day] = daily_tickers[day].union(set(gainers))
 
 if __name__ == '__main__':
     logging.info('hi nemo')

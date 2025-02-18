@@ -64,5 +64,32 @@ def sync_to_github():
 def shrink_up_dataset():
     pass
 
+def market_cap_to_float(s):
+    # 57.45M
+    # 去除字符串末尾的空白字符
+    s = s.strip()
+    if s.endswith('M'):
+        # 去除 'M' 后缀，并转换为浮点数
+        value = float(s[:-1])
+        # 乘以百万的数量级
+        return value * 1e6
+    elif s.endswith('B'):
+        # 去除 'B' 后缀，并转换为浮点数
+        value = float(s[:-1])
+        # 乘以十亿的数量级
+        return value * 1e9
+    elif s.endswith('K'):
+        # 去除 'B' 后缀，并转换为浮点数
+        value = float(s[:-1])
+        # 乘以十亿的数量级
+        return value * 1e3
+    else:
+        # 如果没有 'M' 或 'B' 后缀，直接转换为浮点数
+        return float(s)
+
+def symbol_to_line(symbol):
+    # {'change': 619999.0, 'mkt_cap': 57450000.0, 'price': 6.2, 'ticker': 'XHLD'}
+    return f"{symbol['ticker']},{round(symbol['change'],2)},{round(symbol['price'],2)},{round(symbol['mkt_cap'])}"
+
 if __name__ == "__main__":
     sync_to_github()
